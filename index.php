@@ -1,0 +1,43 @@
+<?php
+$class = str_replace(".php","",basename(__FILE__));
+include_once("inc/header.php");
+?>
+    <div class="<?php echo $class; ?>">
+
+    <h2 class="font-effect-fire">Login</h2>
+
+    <form action="login.php" method="POST" class="auth-form">
+
+        <label for="username">Username</label>
+        <input id="username" type="text" name="username" autocomplete="username" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+
+        <div class="show-password-row">
+            <input type="checkbox" id="showPassword" name="showPassword" aria-describedby="showPasswordHelp">
+            <label for="showPassword">Show Password</label>
+        </div>
+
+        <button type="submit" class="btn btn--login">Login</button>
+
+        <?php
+        if (isset($_SESSION["error"])) {
+            echo "<div class='alert error' role='alert'>" . $_SESSION["error"] . "</div>";
+            unset($_SESSION["error"]);
+        }
+        ?>
+
+    </form>
+
+    <div class="register">
+
+        <p>Don't have an account?</p>
+
+        <a href="register.php">Create Account</a>
+
+    </div>
+
+    </div>
+
+<?php include_once("inc/footer.php"); ?>
