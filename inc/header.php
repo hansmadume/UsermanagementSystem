@@ -1,6 +1,19 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Ensure CSRF token exists for any page that needs to render a form.
+// IMPORTANT: Do NOT rotate the token here; only create it if missing.
+if (empty($_SESSION['csrf'])) {
+    $_SESSION['csrf'] = bin2hex(random_bytes(32));
+}
+// IMPORTANT: do not rotate csrf here; keep token stable for the session.
+
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,4 +41,3 @@ $bodyClass = $isAuth ? 'login-page' : 'dashboard';
 <?php if ($isAuth) : ?>
     <div class="container">
 <?php endif; ?>
-
