@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         !isset($_POST["csrf"], $_SESSION["csrf"]) ||
         !hash_equals($_SESSION["csrf"], $_POST["csrf"])
     ) {
-        $message = "<div class='alert error'>Invalid request. Please try again.</div>";
+        $message = "<div class='error-message'>Invalid request. Please try again.</div>";
     } else {
 
         $username = trim($_POST["username"] ?? "");
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
         if (!empty($errors)) {
-            $message = "<div class='alert error'>" . implode("<br>", array_map('htmlspecialchars', $errors)) . "</div>";
+            $message = "<div class='error-message'>" . implode("<br>", array_map('htmlspecialchars', $errors)) . "</div>";
         } else {
 
             // Check if username already exists
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $result = $check->get_result();
 
             if ($result->num_rows > 0) {
-                $message = "<div class='alert error'>Username already exists.</div>";
+                $message = "<div class='error-message'>Username already exists.</div>";
             } else {
 
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -62,10 +62,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt->bind_param("ss", $username, $hashedPassword);
 
                 if ($stmt->execute()) {
-                    $message = "<div class='alert success'>Account created successfully!</div>";
+                    $message = "<div class='success-message'>Account created successfully!</div>";
 
                 } else {
-                    $message = "<div class='alert error'>Error creating account.</div>";
+                    $message = "<div class='error-message'>Error creating account.</div>";
                 }
 
                 $stmt->close();
@@ -79,24 +79,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <div class="<?php echo $class; ?>">
 
-    <h2 class="font-effect-fire">Create Account</h2>
+    <h2>
+        <span class="material-symbols-outlined" style="vertical-align:middle;margin-right:6px;font-size:28px;">person_add</span>
+        Create Account
+    </h2>
 
     <form method="POST" class="auth-form">
 
         <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf']); ?>">
 
-        <label for="username">Username</label>
+        <label for="username">
+            <span class="material-symbols-outlined" style="vertical-align:middle;font-size:15px;margin-right:4px;">badge</span>
+            Username
+        </label>
         <input id="username" type="text" name="username" placeholder="Choose a username" autocomplete="username" required minlength="3" maxlength="30" pattern="[A-Za-z0-9_]+">
 
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Choose a password" autocomplete="new-password" required minlength="8">
+        <label for="password">
+            <span class="material-symbols-outlined" style="vertical-align:middle;font-size:15px;margin-right:4px;">lock</span>
+            Password
+        </label>
+        <input type="password" id="password" name="password" placeholder="Choose a password (min. 8 characters)" autocomplete="new-password" required minlength="8">
 
         <div class="show-password-row">
             <input type="checkbox" id="showPassword" name="showPassword" aria-describedby="showPasswordHelp">
             <label for="showPassword">Show Password</label>
         </div>
 
-        <button type="submit" class="btn btn--register">Register</button>
+        <button type="submit" class="btn btn--register">
+            <span class="material-symbols-outlined" style="font-size:18px;">how_to_reg</span>
+            Register
+        </button>
 
         <?php echo $message; ?>
 
